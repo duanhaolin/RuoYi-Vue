@@ -53,7 +53,7 @@ public interface BannerMapper
      */
     public int updateBanner(Banner banner);
 
-    int updateMessageDeleteStatusByIds(@Param("array") Long[] ids, @Param("username") String username);
+    int updateBannerDeleteStatusByIds(@Param("array") Long[] ids, @Param("username") String username);
 
 
     /**

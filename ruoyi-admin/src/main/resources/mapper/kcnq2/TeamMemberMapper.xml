@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.kcnq2.mapper.TeamMemberMapper">
+    
+    <resultMap type="TeamMember" id="TeamMemberResult">
+        <result property="id"    column="id"    />
+        <result property="displayOrder"    column="display_order"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="chineseName"    column="chinese_name"    />
+        <result property="englishName"    column="english_name"    />
+        <result property="position"    column="position"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTeamMemberVo">
+        select id, display_order, avatar, chinese_name, english_name, position, description, status, remark, create_by, create_time, update_by, update_time from kcnq2_team_member
+    </sql>
+
+    <select id="selectTeamMemberList" parameterType="TeamMember" resultMap="TeamMemberResult">
+        <include refid="selectTeamMemberVo"/>
+        <where>  
+            <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
+            <if test="englishName != null  and englishName != ''"> and english_name like concat('%', #{englishName}, '%')</if>
+            <if test="position != null  and position != ''"> and position like concat('%', #{position}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTeamMemberById" parameterType="Long" resultMap="TeamMemberResult">
+        <include refid="selectTeamMemberVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTeamMember" parameterType="TeamMember" useGeneratedKeys="true" keyProperty="id">
+        insert into kcnq2_team_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="displayOrder != null">display_order,</if>
+            <if test="avatar != null and avatar != ''">avatar,</if>
+            <if test="chineseName != null and chineseName != ''">chinese_name,</if>
+            <if test="englishName != null and englishName != ''">english_name,</if>
+            <if test="position != null and position != ''">position,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="displayOrder != null">#{displayOrder},</if>
+            <if test="avatar != null and avatar != ''">#{avatar},</if>
+            <if test="chineseName != null and chineseName != ''">#{chineseName},</if>
+            <if test="englishName != null and englishName != ''">#{englishName},</if>
+            <if test="position != null and position != ''">#{position},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTeamMember" parameterType="TeamMember">
+        update kcnq2_team_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="displayOrder != null">display_order = #{displayOrder},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            <if test="chineseName != null and chineseName != ''">chinese_name = #{chineseName},</if>
+            <if test="englishName != null and englishName != ''">english_name = #{englishName},</if>
+            <if test="position != null and position != ''">position = #{position},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateTeamMemberDeleteStatusByIds">
+        update kcnq2_team_member set status = 1 ,update_by = #{username}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <delete id="deleteTeamMemberById" parameterType="Long">
+        delete from kcnq2_team_member where id = #{id}
+    </delete>
+
+    <delete id="deleteTeamMemberByIds" parameterType="String">
+        delete from kcnq2_team_member where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectTeamMemberList2Web" resultType="com.ruoyi.kcnq2.domain.TeamMember">
+        select display_order, avatar, chinese_name, english_name, position, description from kcnq2_team_member
+        where status = 0
+        order by display_order desc
+    </select>
+</mapper>

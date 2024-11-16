@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.kcnq2.mapper.TeamPurposeMapper">
+    
+    <resultMap type="TeamPurpose" id="TeamPurposeResult">
+        <result property="id"    column="id"    />
+        <result property="displayOrder"    column="display_order"    />
+        <result property="title"    column="title"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="jumpUrl"    column="jump_url"    />
+        <result property="brief"    column="brief"    />
+        <result property="detail"    column="detail"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTeamPurposeVo">
+        select id, display_order, title, image_url, jump_url, brief, detail, status, remark, create_by, create_time, update_by, update_time from kcnq2_team_purpose
+    </sql>
+
+    <select id="selectTeamPurposeList" parameterType="TeamPurpose" resultMap="TeamPurposeResult">
+        <include refid="selectTeamPurposeVo"/>
+        <where>  
+            <if test="displayOrder != null "> and display_order = #{displayOrder}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="imageUrl != null  and imageUrl != ''"> and image_url = #{imageUrl}</if>
+            <if test="jumpUrl != null  and jumpUrl != ''"> and jump_url = #{jumpUrl}</if>
+            <if test="brief != null  and brief != ''"> and brief like concat('%', #{brief}, '%')</if>
+            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTeamPurposeById" parameterType="Long" resultMap="TeamPurposeResult">
+        <include refid="selectTeamPurposeVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectTeamPurposeList2Web" resultType="com.ruoyi.kcnq2.domain.TeamPurpose">
+        select display_order, title, image_url, jump_url, brief, detail from kcnq2_team_purpose
+        where status = 0
+        order by display_order desc
+    </select>
+
+    <insert id="insertTeamPurpose" parameterType="TeamPurpose" useGeneratedKeys="true" keyProperty="id">
+        insert into kcnq2_team_purpose
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="displayOrder != null">display_order,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url,</if>
+            <if test="jumpUrl != null">jump_url,</if>
+            <if test="brief != null and brief != ''">brief,</if>
+            <if test="detail != null">detail,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="displayOrder != null">#{displayOrder},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="imageUrl != null and imageUrl != ''">#{imageUrl},</if>
+            <if test="jumpUrl != null">#{jumpUrl},</if>
+            <if test="brief != null and brief != ''">#{brief},</if>
+            <if test="detail != null">#{detail},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTeamPurpose" parameterType="TeamPurpose">
+        update kcnq2_team_purpose
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="displayOrder != null">display_order = #{displayOrder},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url = #{imageUrl},</if>
+            <if test="jumpUrl != null">jump_url = #{jumpUrl},</if>
+            <if test="brief != null and brief != ''">brief = #{brief},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateTeamPurposeDeleteStatusByIds">
+        update kcnq2_team_purpose set status = 1 ,update_by = #{username}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <delete id="deleteTeamPurposeById" parameterType="Long">
+        delete from kcnq2_team_purpose where id = #{id}
+    </delete>
+
+    <delete id="deleteTeamPurposeByIds" parameterType="String">
+        delete from kcnq2_team_purpose where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

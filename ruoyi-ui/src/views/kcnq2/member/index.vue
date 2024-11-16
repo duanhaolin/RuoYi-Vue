@@ -1,26 +1,32 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item label="banner名称" prop="bannerName">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="中文名" prop="chineseName">
         <el-input
-          v-model="queryParams.bannerName"
-          placeholder="请输入banner名称"
+          v-model="queryParams.chineseName"
+          placeholder="请输入中文名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否展示" prop="isShow">
-        <el-select v-model="queryParams.isShow" placeholder="请选择是否展示" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_show_hide"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
+      <el-form-item label="英文名" prop="englishName">
+        <el-input
+          v-model="queryParams.englishName"
+          placeholder="请输入英文名"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
-      <el-form-item label="删除状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择删除状态" clearable>
+      <el-form-item label="职位信息" prop="position">
+        <el-input
+          v-model="queryParams.position"
+          placeholder="请输入职位信息"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="处理状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择处理状态" clearable>
           <el-option
             v-for="dict in dict.type.is_delete"
             :key="dict.value"
@@ -28,22 +34,6 @@
             :value="dict.value"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="展示开始时间" prop="startTime" label-width="99px">
-        <el-date-picker clearable
-          v-model="queryParams.startTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择展示开始时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="展示结束时间" prop="endTime" label-width="99px">
-        <el-date-picker clearable
-          v-model="queryParams.endTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择展示结束时间">
-        </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -59,7 +49,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['kcnq2:banner:add']"
+          v-hasPermi="['kcnq2:member:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -70,7 +60,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['kcnq2:banner:edit']"
+          v-hasPermi="['kcnq2:member:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -81,7 +71,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['kcnq2:banner:remove']"
+          v-hasPermi="['kcnq2:member:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -91,40 +81,27 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['kcnq2:banner:export']"
+          v-hasPermi="['kcnq2:member:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="bannerList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="memberList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号ID" align="center" prop="id" />
-      <el-table-column label="banner名称" align="center" prop="bannerName" />
-      <el-table-column label="图片地址" align="center" prop="imageUrl" width="100">
+      <el-table-column label="序号" align="center" prop="id" />
+      <el-table-column label="展示顺序" align="center" prop="displayOrder" />
+      <el-table-column label="头像" align="center" prop="avatar" width="100">
         <template slot-scope="scope">
-          <image-preview :src="scope.row.imageUrl" :width="50" :height="50"/>
+          <image-preview :src="scope.row.avatar" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="目标地址" align="center" prop="jumpUrl" />
-      <el-table-column label="是否展示" align="center" prop="isShow">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_show_hide" :value="scope.row.isShow"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="删除状态" align="center" prop="status">
+      <el-table-column label="中文名" align="center" prop="chineseName" />
+      <el-table-column label="英文名" align="center" prop="englishName" />
+      <el-table-column label="职位信息" align="center" prop="position" />
+      <el-table-column label="处理状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.is_delete" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="展示开始时间" align="center" prop="startTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="展示结束时间" align="center" prop="endTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
@@ -135,14 +112,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['kcnq2:banner:edit']"
+            v-hasPermi="['kcnq2:member:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['kcnq2:banner:remove']"
+            v-hasPermi="['kcnq2:member:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -156,32 +133,28 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改Banner配置对话框 -->
+    <!-- 添加或修改团队成员管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="99px">
-        <el-form-item label="banner名称" prop="bannerName">
-          <el-input v-model="form.bannerName" placeholder="请输入banner名称" />
-        </el-form-item>
-        <el-form-item label="图片地址" prop="imageUrl">
-          <image-upload v-model="form.imageUrl"/>
-        </el-form-item>
-        <el-form-item label="目标地址" prop="jumpUrl">
-          <el-input v-model="form.jumpUrl" placeholder="请输入目标地址" />
-        </el-form-item>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="展示顺序" prop="displayOrder">
-          <el-input v-model="form.displayOrder" placeholder="请输入展示顺序(数值越大越靠前)" />
+          <el-input v-model="form.displayOrder" placeholder="请输入展示顺序（数值越大越靠前）" />
         </el-form-item>
-        <el-form-item label="是否展示" prop="isShow">
-          <el-select v-model="form.isShow" placeholder="请选择是否展示">
-            <el-option
-              v-for="dict in dict.type.sys_show_hide"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
+        <el-form-item label="头像" prop="avatar">
+          <image-upload v-model="form.avatar"/>
         </el-form-item>
-        <el-form-item label="删除状态" prop="status">
+        <el-form-item label="中文名" prop="chineseName">
+          <el-input v-model="form.chineseName" placeholder="请输入中文名" />
+        </el-form-item>
+        <el-form-item label="英文名" prop="englishName">
+          <el-input v-model="form.englishName" placeholder="请输入英文名" />
+        </el-form-item>
+        <el-form-item label="职位信息" prop="position">
+          <el-input v-model="form.position" placeholder="请输入职位信息" />
+        </el-form-item>
+        <el-form-item label="详细简介" prop="description">
+          <el-input v-model="form.description" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="处理状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in dict.type.is_delete"
@@ -189,22 +162,6 @@
               :label="parseInt(dict.value)"
             >{{dict.label}}</el-radio>
           </el-radio-group>
-        </el-form-item>
-        <el-form-item label="展示开始时间" prop="startTime">
-          <el-date-picker clearable
-            v-model="form.startTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择展示开始时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="展示结束时间" prop="endTime">
-          <el-date-picker clearable
-            v-model="form.endTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择展示结束时间">
-          </el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
@@ -219,11 +176,11 @@
 </template>
 
 <script>
-import { listBanner, getBanner, delBanner, addBanner, updateBanner } from "@/api/kcnq2/banner";
+import { listMember, getMember, delMember, addMember, updateMember } from "@/api/kcnq2/member";
 
 export default {
-  name: "Banner",
-  dicts: ['is_delete', 'sys_show_hide'],
+  name: "Member",
+  dicts: ['is_delete'],
   data() {
     return {
       // 遮罩层
@@ -238,8 +195,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // Banner配置表格数据
-      bannerList: [],
+      // 团队成员管理表格数据
+      memberList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -248,27 +205,32 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        bannerName: null,
-        isShow: null,
+        chineseName: null,
+        englishName: null,
+        position: null,
         status: null,
-        startTime: null,
-        endTime: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        bannerName: [
-          { required: true, message: "banner名称不能为空", trigger: "blur" }
+        displayOrder: [
+          { required: true, message: "展示顺序不能为空", trigger: "blur" }
         ],
-        imageUrl: [
-          { required: true, message: "图片地址不能为空", trigger: "blur" }
+        avatar: [
+          { required: true, message: "头像不能为空", trigger: "blur" }
         ],
-        isShow: [
-          { required: true, message: "是否展示不能为空", trigger: "change" }
+        chineseName: [
+          { required: true, message: "中文名不能为空", trigger: "blur" }
         ],
-        createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
+        englishName: [
+          { required: true, message: "英文名不能为空", trigger: "blur" }
+        ],
+        position: [
+          { required: true, message: "职位信息不能为空", trigger: "blur" }
+        ],
+        description: [
+          { required: true, message: "详细简介不能为空", trigger: "blur" }
         ],
       }
     };
@@ -277,11 +239,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询Banner配置列表 */
+    /** 查询团队成员管理列表 */
     getList() {
       this.loading = true;
-      listBanner(this.queryParams).then(response => {
-        this.bannerList = response.rows;
+      listMember(this.queryParams).then(response => {
+        this.memberList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -295,14 +257,13 @@ export default {
     reset() {
       this.form = {
         id: null,
-        bannerName: null,
-        imageUrl: null,
-        jumpUrl: null,
         displayOrder: null,
-        isShow: null,
+        avatar: null,
+        chineseName: null,
+        englishName: null,
+        position: null,
+        description: null,
         status: null,
-        startTime: null,
-        endTime: null,
         remark: null,
         createBy: null,
         createTime: null,
@@ -331,16 +292,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加Banner配置";
+      this.title = "添加团队成员管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getBanner(id).then(response => {
+      getMember(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改Banner配置";
+        this.title = "修改团队成员管理";
       });
     },
     /** 提交按钮 */
@@ -348,13 +309,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateBanner(this.form).then(response => {
+            updateMember(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addBanner(this.form).then(response => {
+            addMember(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -366,8 +327,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除Banner配置编号为"' + ids + '"的数据项？').then(function() {
-        return delBanner(ids);
+      this.$modal.confirm('是否确认删除团队成员管理编号为"' + ids + '"的数据项？').then(function() {
+        return delMember(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -375,9 +336,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('kcnq2/banner/export', {
+      this.download('kcnq2/member/export', {
         ...this.queryParams
-      }, `banner_${new Date().getTime()}.xlsx`)
+      }, `member_${new Date().getTime()}.xlsx`)
     }
   }
 };

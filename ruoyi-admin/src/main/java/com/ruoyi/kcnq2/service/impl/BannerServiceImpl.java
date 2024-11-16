@@ -88,7 +88,7 @@ public class BannerServiceImpl implements IBannerService {
      */
     @Override
     public int deleteBannerByIds(Long[] ids) {
-        return bannerMapper.updateMessageDeleteStatusByIds(ids, SecurityUtils.getUsername());
+        return bannerMapper.updateBannerDeleteStatusByIds(ids, SecurityUtils.getUsername());
     }
 
     /**
@@ -99,6 +99,6 @@ public class BannerServiceImpl implements IBannerService {
      */
     @Override
     public int deleteBannerById(Long id) {
-        return bannerMapper.updateMessageDeleteStatusByIds(new Long[]{id}, SecurityUtils.getUsername());
+        return bannerMapper.updateBannerDeleteStatusByIds(new Long[]{id}, SecurityUtils.getUsername());
     }
 }
