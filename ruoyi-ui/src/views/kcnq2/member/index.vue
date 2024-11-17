@@ -89,7 +89,7 @@
 
     <el-table v-loading="loading" :data="memberList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="id" />
+      <el-table-column label="序号" align="center" prop="id" width="55"/>
       <el-table-column label="展示顺序" align="center" prop="displayOrder" />
       <el-table-column label="头像" align="center" prop="avatar" width="100">
         <template slot-scope="scope">

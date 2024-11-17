@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.kcnq2.mapper.ArticleMapper">
+    
+    <resultMap type="Article" id="ArticleResult">
+        <result property="id"    column="id"    />
+        <result property="mainTitle"    column="main_title"    />
+        <result property="subTitle"    column="sub_title"    />
+        <result property="summary"    column="summary"    />
+        <result property="category"    column="category"    />
+        <result property="subCategory"    column="sub_category"    />
+        <result property="thumbnail"    column="thumbnail"    />
+        <result property="summaryImage"    column="summary_image"    />
+        <result property="extraInfo1"    column="extra_info1"    />
+        <result property="extraInfo2"    column="extra_info2"    />
+        <result property="extraInfo3"    column="extra_info3"    />
+        <result property="extraInfo4"    column="extra_info4"    />
+        <result property="extraInfo5"    column="extra_info5"    />
+        <result property="contentId"    column="content_id"    />
+        <result property="seoTitle"    column="seo_title"    />
+        <result property="seoKeywords"    column="seo_keywords"    />
+        <result property="seoDescription"    column="seo_description"    />
+        <result property="canonicalUrl"    column="canonical_url"    />
+        <result property="ogTitle"    column="og_title"    />
+        <result property="ogDescription"    column="og_description"    />
+        <result property="ogImage"    column="og_image"    />
+        <result property="structuredData"    column="structured_data"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectArticleVo">
+        select id, main_title, sub_title, summary, category, sub_category, thumbnail, summary_image, extra_info1, extra_info2, extra_info3, extra_info4, extra_info5, content_id, seo_title, seo_keywords, seo_description, canonical_url, og_title, og_description, og_image, structured_data, status, remark, create_by, create_time, update_by, update_time from kcnq2_article
+    </sql>
+
+    <select id="selectArticleList" parameterType="Article" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        <where>  
+            <if test="mainTitle != null  and mainTitle != ''"> and main_title like concat('%', #{mainTitle}, '%')</if>
+            <if test="subTitle != null  and subTitle != ''"> and sub_title like concat('%', #{subTitle}, '%')</if>
+            <if test="summary != null  and summary != ''"> and summary like concat('%', #{summary}, '%')</if>
+            <if test="category != null "> and category = #{category}</if>
+            <if test="subCategory != null "> and sub_category = #{subCategory}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectArticleById" parameterType="Long" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="id">
+        insert into kcnq2_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mainTitle != null and mainTitle != ''">main_title,</if>
+            <if test="subTitle != null and subTitle != ''">sub_title,</if>
+            <if test="summary != null and summary != ''">summary,</if>
+            <if test="category != null">category,</if>
+            <if test="subCategory != null">sub_category,</if>
+            <if test="thumbnail != null">thumbnail,</if>
+            <if test="summaryImage != null">summary_image,</if>
+            <if test="extraInfo1 != null">extra_info1,</if>
+            <if test="extraInfo2 != null">extra_info2,</if>
+            <if test="extraInfo3 != null">extra_info3,</if>
+            <if test="extraInfo4 != null">extra_info4,</if>
+            <if test="extraInfo5 != null">extra_info5,</if>
+            <if test="contentId != null">content_id,</if>
+            <if test="seoTitle != null">seo_title,</if>
+            <if test="seoKeywords != null">seo_keywords,</if>
+            <if test="seoDescription != null">seo_description,</if>
+            <if test="canonicalUrl != null">canonical_url,</if>
+            <if test="ogTitle != null">og_title,</if>
+            <if test="ogDescription != null">og_description,</if>
+            <if test="ogImage != null">og_image,</if>
+            <if test="structuredData != null">structured_data,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mainTitle != null and mainTitle != ''">#{mainTitle},</if>
+            <if test="subTitle != null and subTitle != ''">#{subTitle},</if>
+            <if test="summary != null and summary != ''">#{summary},</if>
+            <if test="category != null">#{category},</if>
+            <if test="subCategory != null">#{subCategory},</if>
+            <if test="thumbnail != null">#{thumbnail},</if>
+            <if test="summaryImage != null">#{summaryImage},</if>
+            <if test="extraInfo1 != null">#{extraInfo1},</if>
+            <if test="extraInfo2 != null">#{extraInfo2},</if>
+            <if test="extraInfo3 != null">#{extraInfo3},</if>
+            <if test="extraInfo4 != null">#{extraInfo4},</if>
+            <if test="extraInfo5 != null">#{extraInfo5},</if>
+            <if test="contentId != null">#{contentId},</if>
+            <if test="seoTitle != null">#{seoTitle},</if>
+            <if test="seoKeywords != null">#{seoKeywords},</if>
+            <if test="seoDescription != null">#{seoDescription},</if>
+            <if test="canonicalUrl != null">#{canonicalUrl},</if>
+            <if test="ogTitle != null">#{ogTitle},</if>
+            <if test="ogDescription != null">#{ogDescription},</if>
+            <if test="ogImage != null">#{ogImage},</if>
+            <if test="structuredData != null">#{structuredData},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateArticle" parameterType="Article">
+        update kcnq2_article
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mainTitle != null and mainTitle != ''">main_title = #{mainTitle},</if>
+            <if test="subTitle != null and subTitle != ''">sub_title = #{subTitle},</if>
+            <if test="summary != null and summary != ''">summary = #{summary},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="subCategory != null">sub_category = #{subCategory},</if>
+            <if test="thumbnail != null">thumbnail = #{thumbnail},</if>
+            <if test="summaryImage != null">summary_image = #{summaryImage},</if>
+            <if test="extraInfo1 != null">extra_info1 = #{extraInfo1},</if>
+            <if test="extraInfo2 != null">extra_info2 = #{extraInfo2},</if>
+            <if test="extraInfo3 != null">extra_info3 = #{extraInfo3},</if>
+            <if test="extraInfo4 != null">extra_info4 = #{extraInfo4},</if>
+            <if test="extraInfo5 != null">extra_info5 = #{extraInfo5},</if>
+            <if test="contentId != null">content_id = #{contentId},</if>
+            <if test="seoTitle != null">seo_title = #{seoTitle},</if>
+            <if test="seoKeywords != null">seo_keywords = #{seoKeywords},</if>
+            <if test="seoDescription != null">seo_description = #{seoDescription},</if>
+            <if test="canonicalUrl != null">canonical_url = #{canonicalUrl},</if>
+            <if test="ogTitle != null">og_title = #{ogTitle},</if>
+            <if test="ogDescription != null">og_description = #{ogDescription},</if>
+            <if test="ogImage != null">og_image = #{ogImage},</if>
+            <if test="structuredData != null">structured_data = #{structuredData},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteArticleById" parameterType="Long">
+        delete from kcnq2_article where id = #{id}
+    </delete>
+
+    <delete id="deleteArticleByIds" parameterType="String">
+        delete from kcnq2_article where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <update id="updateArticleDeleteStatusByIds">
+        update kcnq2_article set status = 2,update_by = #{username}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

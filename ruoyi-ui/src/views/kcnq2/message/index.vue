@@ -103,7 +103,7 @@
 
     <el-table v-loading="loading" :data="messageList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="id" />
+      <el-table-column label="序号" align="center" prop="id" width="55"/>
       <el-table-column label="留言主题" align="center" prop="topic" />
       <el-table-column label="联系方式" align="center" prop="phone" />
       <el-table-column label="附件内容" align="center" prop="attachments" width="100">
