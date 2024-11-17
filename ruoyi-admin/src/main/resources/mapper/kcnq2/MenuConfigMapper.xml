@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.kcnq2.mapper.MenuConfigMapper">
+
+    <resultMap type="MenuConfig" id="MenuConfigResult">
+        <result property="id"    column="id"    />
+        <result property="menuCategory"    column="menu_category"    />
+        <result property="menuSubtype"    column="menu_subtype"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="menuName"    column="menu_name"    />
+        <result property="jumpUrl"    column="jump_url"    />
+        <result property="displayOrder"    column="display_order"    />
+        <result property="isShow"    column="is_show"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectMenuConfigVo">
+        select id, menu_category, menu_subtype, parent_id, menu_name, jump_url, display_order, is_show, status, remark, create_by, create_time, update_by, update_time from kcnq2_menu_config
+    </sql>
+
+    <select id="selectMenuConfigList" parameterType="MenuConfig" resultMap="MenuConfigResult">
+        <include refid="selectMenuConfigVo"/>
+        <where>
+            <if test="menuName != null  and menuName != ''"> and menu_name like concat('%', #{menuName}, '%')</if>
+            <if test="isShow != null "> and is_show = #{isShow}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectMenuConfigById" parameterType="Long" resultMap="MenuConfigResult">
+        <include refid="selectMenuConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMenuConfig" parameterType="MenuConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into kcnq2_menu_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="menuCategory != null and menuCategory != ''">menu_category,</if>
+            <if test="menuSubtype != null and menuSubtype != ''">menu_subtype,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="menuName != null and menuName != ''">menu_name,</if>
+            <if test="jumpUrl != null">jump_url,</if>
+            <if test="displayOrder != null">display_order,</if>
+            <if test="isShow != null">is_show,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="menuCategory != null and menuCategory != ''">#{menuCategory},</if>
+            <if test="menuSubtype != null and menuSubtype != ''">#{menuSubtype},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="menuName != null and menuName != ''">#{menuName},</if>
+            <if test="jumpUrl != null">#{jumpUrl},</if>
+            <if test="displayOrder != null">#{displayOrder},</if>
+            <if test="isShow != null">#{isShow},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMenuConfig" parameterType="MenuConfig">
+        update kcnq2_menu_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="menuCategory != null and menuCategory != ''">menu_category = #{menuCategory},</if>
+            <if test="menuSubtype != null and menuSubtype != ''">menu_subtype = #{menuSubtype},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="menuName != null and menuName != ''">menu_name = #{menuName},</if>
+            <if test="jumpUrl != null">jump_url = #{jumpUrl},</if>
+            <if test="displayOrder != null">display_order = #{displayOrder},</if>
+            <if test="isShow != null">is_show = #{isShow},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateMenuDeleteStatusByIds">
+        update kcnq2_menu_config set status = 1 ,update_by = #{username}
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deleteMenuConfigById" parameterType="Long">
+        delete from kcnq2_menu_config where id = #{id}
+    </delete>
+
+    <delete id="deleteMenuConfigByIds" parameterType="String">
+        delete from kcnq2_menu_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
